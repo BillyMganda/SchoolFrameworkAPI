@@ -45,7 +45,7 @@ namespace SchoolFrameworkAPI.Controllers
             await _repository.CreateDepartmentAsync(department);
 
             var departmentName = department.Name;
-            var location = Url.Link("DefaultApi", new { Namw = departmentName });
+            var location = Url.Link("DefaultApi", new { Name = departmentName });
             return Created(location, department);
         }
 

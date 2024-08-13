@@ -210,6 +210,7 @@
     <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Repositories\IDepartmentRepository.cs" />
     <Compile Include="Repositories\ITeacherRepository.cs" />
+    <Compile Include="Repositories\TeacherRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />

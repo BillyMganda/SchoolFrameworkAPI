@@ -14,10 +14,8 @@ namespace SchoolFrameworkAPI.App_Start
 
             // Register repositories and other dependencies here
             container.RegisterType<IDepartmentRepository, DepartmentRepository>(new HierarchicalLifetimeManager());
-
-            // Register controllers if necessary
-            //container.RegisterType<DepartmentsController>();
-
+            container.RegisterType<ITeacherRepository, TeacherRepository>(new HierarchicalLifetimeManager());
+            
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
         }
     }

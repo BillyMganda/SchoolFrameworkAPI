@@ -10,7 +10,6 @@ namespace SchoolFrameworkAPI.Repositories
     public class DepartmentRepository : IDepartmentRepository
     {
         ScoolFrameworkEntities _entities = new ScoolFrameworkEntities();
-
         public async Task<IEnumerable<Department>> GetDepartmentsAsync()
         {
             var departments = await _entities.Department.ToListAsync();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolFrameworkAPI.App_Start;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,8 +21,8 @@ namespace SchoolFrameworkAPI
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            //IUnityContainer container = new UnityContainer();
-            //container.RegisterType<ILogger, ConsoleLogger>();
+            // Mine
+            UnityConfig.RegisterComponents();
         }
     }
 }

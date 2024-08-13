@@ -1,8 +1,8 @@
 ﻿using DataAccessLayer;
+using SchoolFrameworkAPI.Models;
+using SchoolFrameworkAPI.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -10,113 +10,81 @@ namespace SchoolFrameworkAPI.Controllers
 {
     public class DepartmentsController : ApiController
     {
-        [HttpGet]
-        public IEnumerable<Department> GetDepartments()
+        private readonly IDepartmentRepository _repository;
+        public DepartmentsController(IDepartmentRepository repository)
         {
-            using (ScoolFrameworkEntities _entities = new ScoolFrameworkEntities())
-            {
-                return _entities.Department.ToList();
-            }
+            _repository = repository;
+        }
+
+
+        [HttpGet]
+        public async Task<IHttpActionResult> GetDepartments()
+        {
+            var result = await _repository.GetDepartmentsAsync();
+            return Ok(result);
         }
 
         [HttpGet]
         public async Task<IHttpActionResult> GetDepartment(int id)
-        {
-            using (ScoolFrameworkEntities _entities = new ScoolFrameworkEntities())
+        {            
+            var department = await _repository.GetDepartmentByIdAsync(id);
+
+            if (department == null)
             {
-                var department = await _entities
-                    .Department
-                    .SingleOrDefaultAsync(d => d.Id == id);
-
-                if (department == null)
-                {                    
-                    return NotFound();
-                }
-
-                return Ok(department);
+                return NotFound();
             }
+
+            return Ok(department);
         }
 
         [HttpPost]
-        public async Task<IHttpActionResult> PostDepartment([FromBody] Department department)
+        public async Task<IHttpActionResult> PostDepartment([FromBody] CreateDepartmentRequest department)
         {
             if (department == null)
             {
                 return BadRequest("Department cannot be null");
             }
 
-            using (ScoolFrameworkEntities _entities = new ScoolFrameworkEntities())
-            {
-                var newDepartment = new Department
-                {
-                    Name = department.Name,
-                    DateCreated = DateTime.UtcNow,
-                };
+            await _repository.CreateDepartmentAsync(department);
 
-                _entities.Department.Add(newDepartment);
-                await _entities.SaveChangesAsync();
-
-                var departmentId = department.Id;
-                var location = Url.Link("DefaultApi", new { id = departmentId });
-                return Created(location, department);
-            }
+            var departmentName = department.Name;
+            var location = Url.Link("DefaultApi", new { Namw = departmentName });
+            return Created(location, department);
         }
 
         [HttpPut]
-        public async Task<IHttpActionResult> PutDepartment([FromBody] Department department)
+        public async Task<IHttpActionResult> PutDepartment([FromBody] UpdateDepartmentRequest department)
         {
             if (department == null)
             {
                 return BadRequest("Department cannot be null");
             }
 
-            using (ScoolFrameworkEntities _entities = new ScoolFrameworkEntities())
+            var departmentToUpdate = await _repository.GetDepartmentByIdAsync(department.Id);
+
+            if (departmentToUpdate == null)
             {
-                var existingDepartment = await _entities.Department.FindAsync(department.Id);
-
-                if (existingDepartment == null)
-                {
-                    return NotFound();
-                }
-
-                existingDepartment.Name = department.Name;
-
-                try
-                {
-                    await _entities.SaveChangesAsync();
-                    return Ok();
-                }
-                catch (Exception ex)
-                {                    
-                    return InternalServerError(ex);
-                }
+                return NotFound();
             }
+
+            await _repository.UpdateDepartmentAsync(department);
+
+            return Ok();
         }
 
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteDepartment(int id)
         {
-            using (ScoolFrameworkEntities _entities = new ScoolFrameworkEntities())
-            {                
-                var department = await _entities.Department.FindAsync(id);
+            var department = await _repository.GetDepartmentByIdAsync(id);
 
-                if (department == null)
-                {
-                    return NotFound();
-                }
-                
-                _entities.Department.Remove(department);
-
-                try
-                {                    
-                    await _entities.SaveChangesAsync();
-                    return StatusCode(System.Net.HttpStatusCode.NoContent);
-                }
-                catch (Exception ex)
-                {                    
-                    return InternalServerError(ex);
-                }
+            if (department == null)
+            {
+                return NotFound();
             }
+
+            await _repository.DeleteDepartmentAsync(id);
+
+            return StatusCode(System.Net.HttpStatusCode.NoContent);
         }
     }
 }

@@ -209,6 +209,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Repositories\IDepartmentRepository.cs" />
+    <Compile Include="Repositories\ITeacherRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />

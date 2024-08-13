@@ -6,7 +6,6 @@ using SchoolFrameworkAPI.Models;
 using SchoolFrameworkAPI.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -17,11 +16,7 @@ namespace SchoolFrameworkAPI.Test
 {
     [TestClass]
     public class DepartmentControllerTests
-    {
-        private Mock<ScoolFrameworkEntities> _mockContext;
-        private Mock<DbSet<Department>> _mockSet;
-        private DepartmentsController _controller;
-        
+    {        
         [TestMethod]
         public async Task GetDepartments_ShouldReturnAllDepartments()
         {

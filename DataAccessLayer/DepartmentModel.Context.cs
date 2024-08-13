@@ -26,5 +26,6 @@ namespace DataAccessLayer
         }
     
         public virtual DbSet<Department> Department { get; set; }
+        public virtual DbSet<Teacher> Teacher { get; set; }
     }
 }

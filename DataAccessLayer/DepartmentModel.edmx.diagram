@@ -6,6 +6,8 @@
     <edmx:Diagrams>
       <Diagram DiagramId="2e02117eef124800a21cc581afacef5c" Name="Diagram1">
         <EntityTypeShape EntityType="ScoolFrameworkModel.Department" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ScoolFrameworkModel.Teacher" Width="1.5" PointX="3" PointY="0.75" />
+        <AssociationConnector Association="ScoolFrameworkModel.FK_Teacher_Department" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

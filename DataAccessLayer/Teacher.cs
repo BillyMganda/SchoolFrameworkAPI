@@ -12,19 +12,16 @@ namespace DataAccessLayer
     using System;
     using System.Collections.Generic;
     
-    public partial class Department
+    public partial class Teacher
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Department()
-        {
-            this.Teacher = new HashSet<Teacher>();
-        }
-    
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string MobileNumber { get; set; }
+        public string EmailAddress { get; set; }
+        public int DepartmentId { get; set; }
         public System.DateTime DateCreated { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Teacher> Teacher { get; set; }
+        public virtual Department Department { get; set; }
     }
 }

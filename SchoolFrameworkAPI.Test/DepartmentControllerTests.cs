@@ -2,44 +2,49 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SchoolFrameworkAPI.Controllers;
+using SchoolFrameworkAPI.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Http.Results;
 
 namespace SchoolFrameworkAPI.Test
 {
     [TestClass]
     public class DepartmentControllerTests
-    {             
+    {
+        private Mock<ScoolFrameworkEntities> _mockContext;
+        private Mock<DbSet<Department>> _mockSet;
+        private DepartmentsController _controller;
+        
         [TestMethod]
-        public void GetDepartments_ShouldReturnAllDepartments()
+        public async Task GetDepartments_ShouldReturnAllDepartments()
         {
             // Arrange
-            var data = new List<Department>
+            var mockRepository = new Mock<IDepartmentRepository>();
+            var departments = new List<Department>
             {
                 new Department { Id = 1, Name = "HR", DateCreated = DateTime.UtcNow },
                 new Department { Id = 2, Name = "IT", DateCreated = DateTime.UtcNow }
             }.AsQueryable();
 
-            var mockSet = new Mock<DbSet<Department>>();
-            mockSet.As<IQueryable<Department>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockSet.As<IQueryable<Department>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockSet.As<IQueryable<Department>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<Department>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+            mockRepository.Setup(repo => repo.GetDepartmentsAsync())
+                          .ReturnsAsync(departments);
 
-            var mockContext = new Mock<ScoolFrameworkEntities>();
-            mockContext.Setup(c => c.Department).Returns(mockSet.Object);
+            var controller = new DepartmentsController(mockRepository.Object);
 
             // Act
-            //var controller = new DepartmentsController();
-            //var result = controller.GetDepartments();
+            var result = await controller.GetDepartments();
 
-            //// Assert
-            //Assert.IsNotNull(result);
-            //Assert.AreEqual(2, result.Count());
-            //Assert.AreEqual("HR", result.ElementAt(0).Name);
-            //Assert.AreEqual("IT", result.ElementAt(1).Name);
+            // Assert
+            var okResult = result as OkNegotiatedContentResult<IEnumerable<Department>>;
+            Assert.IsNotNull(okResult);
+            Assert.IsNotNull(okResult.Content);
+            Assert.AreEqual(2, okResult.Content.Count());
+            Assert.AreEqual("HR", okResult.Content.ElementAt(0).Name);
+            Assert.AreEqual("IT", okResult.Content.ElementAt(1).Name);
         }
     }
 }

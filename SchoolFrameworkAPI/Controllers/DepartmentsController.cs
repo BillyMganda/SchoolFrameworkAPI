@@ -1,8 +1,5 @@
-﻿using DataAccessLayer;
-using SchoolFrameworkAPI.Models;
+﻿using SchoolFrameworkAPI.Models;
 using SchoolFrameworkAPI.Repositories;
-using System;
-using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web.Http;
 

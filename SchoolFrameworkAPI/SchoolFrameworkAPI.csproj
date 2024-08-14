@@ -213,6 +213,7 @@
     <Compile Include="Models\UpdateTeacherRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
+    <Compile Include="Repositories\FormRepository.cs" />
     <Compile Include="Repositories\IDepartmentRepository.cs" />
     <Compile Include="Repositories\IFormRepository.cs" />
     <Compile Include="Repositories\ITeacherRepository.cs" />

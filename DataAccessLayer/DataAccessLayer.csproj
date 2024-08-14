@@ -68,6 +68,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DepartmentModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Form.cs">
+      <DependentUpon>DepartmentModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Teacher.cs">
       <DependentUpon>DepartmentModel.tt</DependentUpon>

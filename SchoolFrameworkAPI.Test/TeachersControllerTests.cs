@@ -1,5 +1,4 @@
-﻿using DataAccessLayer;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SchoolFrameworkAPI.Controllers;
 using SchoolFrameworkAPI.Models;

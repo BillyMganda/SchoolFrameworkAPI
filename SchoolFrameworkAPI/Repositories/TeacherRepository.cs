@@ -3,6 +3,7 @@ using SchoolFrameworkAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SchoolFrameworkAPI.Repositories
@@ -10,19 +11,42 @@ namespace SchoolFrameworkAPI.Repositories
     public class TeacherRepository : ITeacherRepository
     {
         ScoolFrameworkEntities _entities = new ScoolFrameworkEntities();
-        public async Task<IEnumerable<Teacher>> GetTeachersAsync()
+        public async Task<IEnumerable<GetTeacherResponse>> GetTeachersAsync()
         {
             var teachers = await _entities.Teacher.ToListAsync();
-            return teachers;
+
+            var response = teachers.Select(t => new  GetTeacherResponse
+            {
+                Id = t.Id,
+                FirstName = t.FirstName,
+                LastName = t.LastName,
+                MobileNumber = t.MobileNumber,
+                EmailAddress = t.EmailAddress,
+                DepartmentId = t.DepartmentId,
+                DateCreated = t.DateCreated,
+            }).ToList();
+
+            return response;
         }
 
-        public async Task<Teacher> GetTeacherByIdAsync(int id)
+        public async Task<GetTeacherResponse> GetTeacherByIdAsync(int id)
         {
             var teacher = await _entities
                 .Teacher
                 .FirstOrDefaultAsync(d => d.Id == id);
 
-            return teacher;
+            var response = new GetTeacherResponse
+            {
+                Id = teacher.Id,
+                FirstName = teacher.FirstName,
+                LastName = teacher.LastName,
+                MobileNumber = teacher.MobileNumber,
+                EmailAddress = teacher.EmailAddress,
+                DepartmentId = teacher.DepartmentId,
+                DateCreated = teacher.DateCreated,
+            };
+
+            return response;
         }
 
         public async Task CreateTeacherAsync(CreateTeacherRequest request)

@@ -41,5 +41,28 @@ namespace SchoolFrameworkAPI.Test
             Assert.AreEqual("Form1", okResult.Content.ElementAt(0).Name);
             Assert.AreEqual("Form2", okResult.Content.ElementAt(1).Name);
         }
+
+        [TestMethod]
+        public async Task GetForm_ShouldReturnForm_WhenFormExists()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+            var form = new GetFormResponse { Id = 1, Name = "Form1", DateCreated = DateTime.UtcNow };
+
+            mockRepository.Setup(repo => repo.GetFormByIdAsync(1))
+                          .ReturnsAsync(form);
+
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.GetForm(1);
+
+            // Assert
+            var okResult = result as OkNegotiatedContentResult<GetFormResponse>;
+            Assert.IsNotNull(okResult);
+            Assert.IsNotNull(okResult.Content);
+            Assert.AreEqual(1, okResult.Content.Id);
+            Assert.AreEqual("Form1", okResult.Content.Name);
+        }
     }
 }

@@ -8,6 +8,7 @@
         <EntityTypeShape EntityType="ScoolFrameworkModel.Department" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ScoolFrameworkModel.Teacher" Width="1.5" PointX="3" PointY="0.75" />
         <AssociationConnector Association="ScoolFrameworkModel.FK_Teacher_Department" />
+        <EntityTypeShape EntityType="ScoolFrameworkModel.Form" Width="1.5" PointX="5" PointY="0.875" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

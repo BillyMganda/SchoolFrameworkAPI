@@ -8,6 +8,8 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Web.Http.Results;
+using System.Web.Http.Routing;
+using System.Web.Http;
 
 namespace SchoolFrameworkAPI.Test
 {
@@ -63,6 +65,167 @@ namespace SchoolFrameworkAPI.Test
             Assert.IsNotNull(okResult.Content);
             Assert.AreEqual(1, okResult.Content.Id);
             Assert.AreEqual("Form1", okResult.Content.Name);
+        }
+
+        [TestMethod]
+        public async Task GetForm_ShouldReturnNotFound_WhenFormDoesNotExist()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+
+            mockRepository.Setup(repo => repo.GetFormByIdAsync(1))
+                          .ReturnsAsync((GetFormResponse)null);
+
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.GetForm(1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public async Task PostForm_ShouldReturnCreatedResult_WhenRequestIsValid()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+            var formRequest = new CreateFormRequest { Name = "Form1" };
+
+            mockRepository.Setup(repo => repo.CreateFormAsync(formRequest))
+                          .Returns(Task.CompletedTask);
+
+            var controller = new FormsController(mockRepository.Object);
+
+            // Setup the Url.Link to return a dummy URL
+            controller.Request = new System.Net.Http.HttpRequestMessage();
+            controller.Configuration = new HttpConfiguration();
+            var urlHelper = new Mock<UrlHelper>();
+            urlHelper.Setup(x => x.Link(It.IsAny<string>(), It.IsAny<object>())).Returns("http://localhost/api/form/form1");
+            controller.Url = urlHelper.Object;
+
+            // Act
+            var result = await controller.PostForm(formRequest);
+
+            // Assert
+            var createdResult = result as CreatedNegotiatedContentResult<CreateFormRequest>;
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual("http://localhost/api/form/form1", createdResult.Location.ToString());
+            Assert.AreEqual("Form1", createdResult.Content.Name);
+        }
+
+        [TestMethod]
+        public async Task PostForm_ShouldReturnBadRequest_WhenRequestIsNull()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.PostForm(null);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestErrorMessageResult));
+            var badRequestResult = result as BadRequestErrorMessageResult;
+            Assert.AreEqual("Request cannot be null", badRequestResult.Message);
+        }
+
+        [TestMethod]
+        public async Task PutForm_ShouldReturnOk_WhenRequestIsValid()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+            var formRequest = new UpdateFormRequest { Id = 1, Name = "Updated_Form1" };
+            var existingForm = new GetFormResponse { Id = 1, Name = "Form1" };
+
+            mockRepository.Setup(repo => repo.GetFormByIdAsync(1))
+                          .ReturnsAsync(existingForm);
+            mockRepository.Setup(repo => repo.UpdateFormAsync(formRequest))
+                          .Returns(Task.CompletedTask);
+
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.PutForm(formRequest);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod]
+        public async Task PutForm_ShouldReturnBadRequest_WhenRequestIsNull()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.PutForm(null);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestErrorMessageResult));
+            var badRequestResult = result as BadRequestErrorMessageResult;
+            Assert.AreEqual("Request cannot be null", badRequestResult.Message);
+        }
+
+        [TestMethod]
+        public async Task PutForm_ShouldReturnNotFound_WhenFormDoesNotExist()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+            var formRequest = new UpdateFormRequest { Id = 1, Name = "Updated_Form1" };
+
+            mockRepository.Setup(repo => repo.GetFormByIdAsync(1))
+                          .ReturnsAsync((GetFormResponse)null);
+
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.PutForm(formRequest);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public async Task DeleteForm_ShouldReturnNoContent_WhenFormExists()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+            var existingForm = new GetFormResponse { Id = 1, Name = "Form1" };
+
+            mockRepository.Setup(repo => repo.GetFormByIdAsync(1))
+                          .ReturnsAsync(existingForm);
+            mockRepository.Setup(repo => repo.DeleteFormAsync(1))
+                          .Returns(Task.CompletedTask);
+
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.DeleteForm(1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(StatusCodeResult));
+            var statusCodeResult = result as StatusCodeResult;
+            Assert.AreEqual(System.Net.HttpStatusCode.NoContent, statusCodeResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task DeleteForm_ShouldReturnNotFound_WhenFormDoesNotExist()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+
+            mockRepository.Setup(repo => repo.GetFormByIdAsync(1))
+                          .ReturnsAsync((GetFormResponse)null);
+
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.DeleteForm(1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
     }
 }

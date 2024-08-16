@@ -1,5 +1,6 @@
 ﻿using SchoolFrameworkAPI.Models;
 using SchoolFrameworkAPI.Repositories;
+using System;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -72,16 +73,23 @@ namespace SchoolFrameworkAPI.Controllers
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteForm(int id)
         {
-            var formToDelete = await _repository.GetFormByIdAsync(id);
-
-            if (formToDelete == null)
+            try
             {
-                return NotFound();
+                var formToDelete = await _repository.GetFormByIdAsync(id);
+
+                if (formToDelete == null)
+                {
+                    return NotFound();
+                }
+
+                await _repository.DeleteFormAsync(id);
+
+                return StatusCode(System.Net.HttpStatusCode.NoContent);
             }
-
-            await _repository.DeleteFormAsync(id);
-
-            return StatusCode(System.Net.HttpStatusCode.NoContent);
+            catch(Exception ex)
+            {
+                return InternalServerError(ex);
+            }            
         }
     }
 }

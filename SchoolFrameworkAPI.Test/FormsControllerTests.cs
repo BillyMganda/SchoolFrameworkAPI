@@ -227,5 +227,27 @@ namespace SchoolFrameworkAPI.Test
             // Assert
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
+
+        [TestMethod]
+        public async Task DeleteForm_ShouldReturnInternalServerError_WhenExceptionIsThrown()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+
+            var expectedException = new Exception("Database error");
+
+            mockRepository.Setup(repo => repo.GetFormByIdAsync(It.IsAny<int>()))
+                          .ThrowsAsync(expectedException);
+
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.DeleteForm(1);
+
+            // Assert            
+            Assert.IsInstanceOfType(result, typeof(ExceptionResult));
+            var exceptionResult = result as ExceptionResult;
+            Assert.AreEqual(expectedException, exceptionResult.Exception);
+        }
     }
 }

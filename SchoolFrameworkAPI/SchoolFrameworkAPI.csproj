@@ -206,11 +206,14 @@
     </Compile>
     <Compile Include="Models\CreateDepartmentRequest.cs" />
     <Compile Include="Models\CreateFormRequest.cs" />
+    <Compile Include="Models\CreateStudentRequest.cs" />
     <Compile Include="Models\CreateTeacherRequest.cs" />
     <Compile Include="Models\GetFormResponse.cs" />
+    <Compile Include="Models\GetStudentResponse.cs" />
     <Compile Include="Models\GetTeacherResponse.cs" />
     <Compile Include="Models\UpdateDepartmentRequest.cs" />
     <Compile Include="Models\UpdateFormRequest.cs" />
+    <Compile Include="Models\UpdateStudentRequest.cs" />
     <Compile Include="Models\UpdateTeacherRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />

@@ -21,6 +21,20 @@
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="DateCreated" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateOfBirth" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParentOrGuardianFirstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParentOrGuardianLastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParentOrGuardianPhoneNumber" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParentOrGuardianEmailAddress" Type="varchar" MaxLength="50" />
+          <Property Name="FormId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Teacher">
           <Key>
             <PropertyRef Name="Id" />
@@ -33,6 +47,18 @@
           <Property Name="DepartmentId" Type="int" Nullable="false" />
           <Property Name="DateCreated" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Student_Form">
+          <End Role="Form" Type="Self.Form" Multiplicity="1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Form">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="FormId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Teacher_Department">
           <End Role="Department" Type="Self.Department" Multiplicity="1" />
           <End Role="Teacher" Type="Self.Teacher" Multiplicity="*" />
@@ -48,7 +74,12 @@
         <EntityContainer Name="ScoolFrameworkModelStoreContainer">
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Form" EntityType="Self.Form" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Teacher" EntityType="Self.Teacher" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Student_Form" Association="Self.FK_Student_Form">
+            <End Role="Form" EntitySet="Form" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
           <AssociationSet Name="FK_Teacher_Department" Association="Self.FK_Teacher_Department">
             <End Role="Department" EntitySet="Department" />
             <End Role="Teacher" EntitySet="Teacher" />
@@ -75,6 +106,11 @@
             <End Role="Teacher" EntitySet="Teacher" />
           </AssociationSet>
           <EntitySet Name="Form" EntityType="ScoolFrameworkModel.Form" />
+          <EntitySet Name="Student" EntityType="ScoolFrameworkModel.Student" />
+          <AssociationSet Name="FK_Student_Form" Association="ScoolFrameworkModel.FK_Student_Form">
+            <End Role="Form" EntitySet="Form" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Teacher">
           <Key>
@@ -108,7 +144,35 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Student" Relationship="ScoolFrameworkModel.FK_Student_Form" FromRole="Form" ToRole="Student" />
         </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateOfBirth" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ParentOrGuardianFirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ParentOrGuardianLastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ParentOrGuardianPhoneNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ParentOrGuardianEmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FormId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Form" Relationship="ScoolFrameworkModel.FK_Student_Form" FromRole="Student" ToRole="Form" />
+        </EntityType>
+        <Association Name="FK_Student_Form">
+          <End Type="ScoolFrameworkModel.Form" Role="Form" Multiplicity="1" />
+          <End Type="ScoolFrameworkModel.Student" Role="Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Form">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="FormId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -142,6 +206,21 @@
               <MappingFragment StoreEntitySet="Form">
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Student">
+            <EntityTypeMapping TypeName="ScoolFrameworkModel.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="FormId" ColumnName="FormId" />
+                <ScalarProperty Name="ParentOrGuardianEmailAddress" ColumnName="ParentOrGuardianEmailAddress" />
+                <ScalarProperty Name="ParentOrGuardianPhoneNumber" ColumnName="ParentOrGuardianPhoneNumber" />
+                <ScalarProperty Name="ParentOrGuardianLastName" ColumnName="ParentOrGuardianLastName" />
+                <ScalarProperty Name="ParentOrGuardianFirstName" ColumnName="ParentOrGuardianFirstName" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

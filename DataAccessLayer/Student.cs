@@ -12,19 +12,18 @@ namespace DataAccessLayer
     using System;
     using System.Collections.Generic;
     
-    public partial class Form
+    public partial class Student
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Form()
-        {
-            this.Student = new HashSet<Student>();
-        }
-    
         public int Id { get; set; }
-        public string Name { get; set; }
-        public System.DateTime DateCreated { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DateOfBirth { get; set; }
+        public string ParentOrGuardianFirstName { get; set; }
+        public string ParentOrGuardianLastName { get; set; }
+        public string ParentOrGuardianPhoneNumber { get; set; }
+        public string ParentOrGuardianEmailAddress { get; set; }
+        public int FormId { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Student> Student { get; set; }
+        public virtual Form Form { get; set; }
     }
 }

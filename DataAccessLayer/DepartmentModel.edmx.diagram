@@ -9,6 +9,8 @@
         <EntityTypeShape EntityType="ScoolFrameworkModel.Teacher" Width="1.5" PointX="3" PointY="0.75" />
         <AssociationConnector Association="ScoolFrameworkModel.FK_Teacher_Department" />
         <EntityTypeShape EntityType="ScoolFrameworkModel.Form" Width="1.5" PointX="5" PointY="0.875" />
+        <EntityTypeShape EntityType="ScoolFrameworkModel.Student" Width="1.5" PointX="7.75" PointY="0.875" />
+        <AssociationConnector Association="ScoolFrameworkModel.FK_Student_Form" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

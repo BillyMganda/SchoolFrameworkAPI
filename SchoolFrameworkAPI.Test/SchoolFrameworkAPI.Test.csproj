@@ -84,6 +84,7 @@
     <Compile Include="DepartmentRepositoryTests.cs" />
     <Compile Include="FormsControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StudentsControllerTest.cs" />
     <Compile Include="TeachersControllerTests.cs" />
   </ItemGroup>
   <ItemGroup>

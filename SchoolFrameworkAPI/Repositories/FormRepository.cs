@@ -73,5 +73,67 @@ namespace SchoolFrameworkAPI.Repositories
                 await _entities.SaveChangesAsync();
             }
         }
+
+        // ----------------------------------------------------------------------------------------------
+        public async Task<GetFormStudentResponse> GetFormWithStudentsByFormIdAsync(int formId)
+        {
+            var form = await _entities.Form
+                .Include(f => f.Student)
+                .FirstOrDefaultAsync(f => f.Id == formId);
+
+            if (form == null)
+            {
+                return null;
+            }
+
+            var formResponse = new GetFormStudentResponse
+            {
+                Id = form.Id,
+                Name = form.Name,
+                DateCreated = form.DateCreated,
+                StudentsList = form.Student.Select(s => new GetStudentResponse
+                {
+                    Id = s.Id,
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    DateOfBirth = s.DateOfBirth,
+                    ParentOrGuardianFirstName = s.ParentOrGuardianFirstName,
+                    ParentOrGuardianLastName = s.ParentOrGuardianLastName,
+                    ParentOrGuardianPhoneNumber = s.ParentOrGuardianPhoneNumber,
+                    ParentOrGuardianEmailAddress = s.ParentOrGuardianEmailAddress,
+                    FormName = form.Name
+                }).ToList()
+            };
+
+            return formResponse;
+        }
+
+        public async Task<IEnumerable<GetFormStudentResponse>> GetFormsWithStudentsAsync()
+        {
+            var forms = await _entities.Form
+                .Include(f => f.Student)
+                .ToListAsync();
+
+            var formResponses = forms.Select(f => new GetFormStudentResponse
+            {
+                Id = f.Id,
+                Name = f.Name,
+                DateCreated = f.DateCreated,
+                StudentsList = f.Student.Select(s => new GetStudentResponse
+                {
+                    Id = s.Id,
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    DateOfBirth = s.DateOfBirth,
+                    ParentOrGuardianFirstName = s.ParentOrGuardianFirstName,
+                    ParentOrGuardianLastName = s.ParentOrGuardianLastName,
+                    ParentOrGuardianPhoneNumber = s.ParentOrGuardianPhoneNumber,
+                    ParentOrGuardianEmailAddress = s.ParentOrGuardianEmailAddress,
+                    FormName = f.Name
+                }).ToList()
+            });
+
+            return formResponses;
+        }
     }
 }

@@ -91,5 +91,29 @@ namespace SchoolFrameworkAPI.Controllers
                 return InternalServerError(ex);
             }            
         }
+
+        // ---------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Route("api/forms/all")]
+        public async Task<IHttpActionResult> GetFormsWithStudentsAsync()
+        {
+            var result = await _repository.GetFormsWithStudentsAsync();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("api/forms/all-id")]
+        public async Task<IHttpActionResult> GetFormWithStudentsByFormIdAsync(int id)
+        {
+            var result = await _repository.GetFormWithStudentsByFormIdAsync(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
     }
 }

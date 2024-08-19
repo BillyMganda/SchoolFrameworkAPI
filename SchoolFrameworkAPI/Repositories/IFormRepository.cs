@@ -11,5 +11,8 @@ namespace SchoolFrameworkAPI.Repositories
         Task CreateFormAsync(CreateFormRequest request);
         Task UpdateFormAsync(UpdateFormRequest request);
         Task DeleteFormAsync(int id);
+        // ------------------------------------------------------------------------------------------
+        Task<GetFormStudentResponse> GetFormWithStudentsByFormIdAsync(int formId);
+        Task<IEnumerable<GetFormStudentResponse>> GetFormsWithStudentsAsync();
     }
 }

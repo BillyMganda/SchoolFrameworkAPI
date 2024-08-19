@@ -1,12 +1,15 @@
-﻿using System;
+﻿using SchoolFrameworkAPI.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SchoolFrameworkAPI.Repositories
 {
-    internal interface IStudentRepository
+    public interface IStudentRepository
     {
+        Task<IEnumerable<GetStudentResponse>> GetStudentsAsync();
+        Task<GetStudentResponse> GetStudentByIdAsync(int id);
+        Task CreateStudentAsync(CreateStudentRequest request);
+        Task UpdateStudentAsync(UpdateStudentRequest request);
+        Task DeleteStudentAsync(int id);
     }
 }

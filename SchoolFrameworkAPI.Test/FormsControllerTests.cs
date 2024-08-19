@@ -249,5 +249,97 @@ namespace SchoolFrameworkAPI.Test
             var exceptionResult = result as ExceptionResult;
             Assert.AreEqual(expectedException, exceptionResult.Exception);
         }
+
+        // ----------------------------------------------------------------------------------------------------
+
+        [TestMethod]
+        public async Task GetForms_ShouldReturnAllFormsWithNestedStudents()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+            var forms = new List<GetFormStudentResponse>
+            {
+                new GetFormStudentResponse
+                    {
+                        Id = 1,
+                        Name = "Form1",
+                        DateCreated = DateTime.UtcNow,
+                        StudentsList = new List<GetStudentResponse>
+                        {
+                            new GetStudentResponse { Id = 1, FirstName = "John", LastName = "Doe", FormName = "Form1" },
+                            new GetStudentResponse { Id = 2, FirstName = "Jane", LastName = "Smith", FormName = "Form1" }
+                        }
+                    },
+                new GetFormStudentResponse
+                    {
+                        Id = 2,
+                        Name = "Form2",
+                        DateCreated = DateTime.UtcNow,
+                        StudentsList = new List<GetStudentResponse>
+                        {
+                            new GetStudentResponse { Id = 3, FirstName = "Alice", LastName = "Johnson", FormName = "Form2" },
+                            new GetStudentResponse { Id = 4, FirstName = "Bob", LastName = "Brown", FormName = "Form2" }
+                        }
+                    }
+            };
+
+            mockRepository.Setup(repo => repo.GetFormsWithStudentsAsync())
+                .ReturnsAsync(forms);
+
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.GetFormsWithStudentsAsync();
+
+            // Assert
+            var okResult = result as OkNegotiatedContentResult<IEnumerable<GetFormStudentResponse>>;
+            Assert.IsNotNull(okResult);
+            Assert.IsNotNull(okResult.Content);
+            Assert.AreEqual(2, okResult.Content.Count());
+            Assert.AreEqual("Form1", okResult.Content.ElementAt(0).Name);
+            Assert.AreEqual(2, okResult.Content.ElementAt(0).StudentsList.Count);
+            Assert.AreEqual("John", okResult.Content.ElementAt(0).StudentsList.ElementAt(0).FirstName);
+            Assert.AreEqual("Jane", okResult.Content.ElementAt(0).StudentsList.ElementAt(1).FirstName);
+            Assert.AreEqual("Form2", okResult.Content.ElementAt(1).Name);
+            Assert.AreEqual(2, okResult.Content.ElementAt(1).StudentsList.Count);
+            Assert.AreEqual("Alice", okResult.Content.ElementAt(1).StudentsList.ElementAt(0).FirstName);
+            Assert.AreEqual("Bob", okResult.Content.ElementAt(1).StudentsList.ElementAt(1).FirstName);
+        }
+
+        [TestMethod]
+        public async Task GetForm_ShouldReturnFormAndStudentList_WhenFormExists()
+        {
+            // Arrange
+            var mockRepository = new Mock<IFormRepository>();
+            var form = new GetFormStudentResponse
+            {
+                Id = 1,
+                Name = "Form1",
+                DateCreated = DateTime.UtcNow,
+                StudentsList = new List<GetStudentResponse>
+                    {
+                        new GetStudentResponse { Id = 1, FirstName = "John", LastName = "Doe", FormName = "Form1" },
+                        new GetStudentResponse { Id = 2, FirstName = "Jane", LastName = "Smith", FormName = "Form1" }
+                    }
+            };
+
+            mockRepository.Setup(repo => repo.GetFormWithStudentsByFormIdAsync(1))
+                          .ReturnsAsync(form);
+
+            var controller = new FormsController(mockRepository.Object);
+
+            // Act
+            var result = await controller.GetFormWithStudentsByFormIdAsync(1);
+
+            // Assert
+            var okResult = result as OkNegotiatedContentResult<GetFormStudentResponse>;
+            Assert.IsNotNull(okResult);
+            Assert.IsNotNull(okResult.Content);
+            Assert.AreEqual(1, okResult.Content.Id);
+            Assert.AreEqual("Form1", okResult.Content.Name);
+            Assert.AreEqual(2, okResult.Content.StudentsList.Count);
+            Assert.AreEqual("John", okResult.Content.StudentsList.ElementAt(0).FirstName);
+            Assert.AreEqual("Jane", okResult.Content.StudentsList.ElementAt(1).FirstName);
+        }
     }
 }

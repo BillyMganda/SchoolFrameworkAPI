@@ -248,6 +248,12 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="K6Tests\Load_Tests\GET_Forms_Load_Test.js" />
+    <Content Include="K6Tests\Load_Tests\load_test.js" />
+    <Content Include="K6Tests\Soak_Tests\soak_test.js" />
+    <Content Include="K6Tests\Spike_Tests\GET_Teachers_Spike_Test.js" />
+    <Content Include="K6Tests\Spike_Tests\spike_test.js" />
+    <Content Include="K6Tests\Stress_Tests\stress_test.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
